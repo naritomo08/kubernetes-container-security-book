@@ -1,14 +1,19 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: security
+---
+apiVersion: v1
 kind: Pod
 metadata:
   name: sample-web
   labels:
     app: sample-web
+  namespace: security
 spec:
   containers:
   - name: web
-    image: <Docker ID>/sample-web:case1  
-
+    image: naritomojp/sample-web:case1  
 ---
 apiVersion: v1
 kind: Service
@@ -16,10 +21,10 @@ metadata:
   name: sample-web
   labels:
     app: sample-web
+  namespace: security
 spec:
   selector:
     app: sample-web
-  type: LoadBalancer
   ports:
   - protocol: TCP
     port: 80

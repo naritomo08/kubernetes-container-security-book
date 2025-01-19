@@ -39,9 +39,20 @@ minikube tunnel
 kubectl get all -l app=sample-web
 ```
 
+```bash
+kubectl port-
+forward -n security service/sample-web 30050:80
+macで実施
+ssh -L 30050:127.0.0.1:30050 naritomo@192.168.11.34
+
+もしくは
+kubectl port-forward --address 0.0.0.0 -n security service/sample-web 30050:80
+```
+
 `curlコマンドによるアクセス確認`
 ```bash
-curl http://<EXTERNAL-IP>
+curl http://127.0.0.1:30050
+curl http://192.168.11.34:30050
 ```
 
 `ターミナル1: ncコマンドの実行`

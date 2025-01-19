@@ -16,8 +16,7 @@ docker push <Docker ID>/sample-web:case2
 ```bash
 kubectl apply -f sample-web.yaml
 
-kubectl get pod sample-web
-```
+kubectl get pod sample-web -n security
 
 `DockerHubからのログアウト`
 ```bash
@@ -48,7 +47,7 @@ tar xvf sample-web.tar -C ./sample-web
 
 for layer in $(cat sample-web/manifest.json | jq -c '.[0].Layers[]' | sed s/\"//g); do \
   layer_dir=sample-web/blobs/sha256/layer-$(eval echo ${layer} | awk '{sub("blobs/sha256/", "");print $0;}') ; \
-  mkdir ${layer_dir} ; \
+  mkdir -p ${layer_dir} ; \
   tar xvf sample-web/${layer} -C ${layer_dir} ; \
 done
 
@@ -97,21 +96,23 @@ docker images <Docker ID>/sample-web-private:case2
 ```bash
 kubectl apply -f sample-web-private.yaml
 
-kubectl get pod sample-web-private
+kubectl get pod sample-web-private -n security
 
-kubectl describe pod sample-web-private
+kubectl describe pod sample-web-private -n security
 
-kubectl delete pod sample-web-private
+kubectl delete pod sample-web-private -n security
 ```
 
 `レジストリの認証情報を含むSecretの作成`
 ```bash
-kubectl create secret docker-registry regcred \
-        --docker-server=<レジストリURL> \
+kubectl create secret docker-registry regcred -n security \
+        --docker-server=https://index.docker.io/v1/ \
         --docker-username=<Docker ID> \
         --docker-password=<Password> \
         --docker-email=<アカウントメールアドレス>
 
+kubectl apply -f namespace.yaml
+kubectl apply -f secret.yaml
 kubectl get secret regcred
 ```
 
@@ -119,7 +120,7 @@ kubectl get secret regcred
 ```bash
 kubectl apply -f sample-web-private-with-regcred.yaml
 
-kubectl get pod sample-web-private
+kubectl get pod sample-web-private -n security
 ```
 
 `検証に使用したリソースの削除`
@@ -127,4 +128,10 @@ kubectl get pod sample-web-private
 kubectl delete pod sample-web sample-web-private
 
 kubectl delete secret regcred
+
+kubectl delete -f sample-web.yaml
+kubectl delete -f sample-web-private.yaml
+kubectl delete -f sample-web-private-with-regcred.yaml
+kubectl delete -f secret.yaml
+kubectl delete -f namespace.yaml
 ```

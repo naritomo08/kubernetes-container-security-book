@@ -4,8 +4,9 @@ metadata:
   name: sample-web-private
   labels:
     app: sample-web-private
+  namespace: security
 spec:
   containers:
   - name: web
-    image: <Docker ID>/sample-web-private:case2
+    image: naritomojp/sample-web-private:case2
     imagePullPolicy: Always

@@ -1,10 +1,16 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: security
+---
+apiVersion: v1
 kind: Pod
 metadata:
+  namespace: security
   name: sample-web-go-standard
   labels:
     app: sample-web-go
 spec:
   containers:
   - name: web
-    image: <Docker ID>/sample-web:go-standard
+    image: naritomojp/sample-web:go-standard

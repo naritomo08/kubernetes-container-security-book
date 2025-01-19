@@ -58,6 +58,8 @@ curl http://192.168.11.34:30050
 `ターミナル1: ncコマンドの実行`
 ```bash
 nc -nvlp 5050
+macの場合
+nc -nl 5050
 ```
 
 `ターミナル2: curlコマンドによる不正なリクエストの送信`
@@ -135,12 +137,12 @@ kubectl apply -f sample-web-go-standard.yaml
 
 kubectl apply -f sample-web-go-multi.yaml
 
-kubectl get pods -l app=sample-web-go
+kubectl get pods -l app=sample-web-go -n security
 ```
 
 `sample-web-go-standardに対するkubectl execの実行`
 ```bash
-kubectl exec -it sample-web-go-standard -- /bin/bash
+kubectl exec -it sample-web-go-standard  -n security -- /bin/bash
 
 root@sample-web-go-standard:/go/src/app# ps aux
 
@@ -149,12 +151,12 @@ root@sample-web-go-standard:/go/src/app# exit
 
 `sample-web-go-multiに対するkubectl execの実行`
 ```bash
-kubectl exec -it sample-web-go-multi -- /bin/bash
+kubectl exec -it sample-web-go-multi  -n security -- /bin/bash
 ```
 
 `エフェメラルコンテナの使用`
 ```bash
-kubectl debug -it sample-web-go-multi --image=busybox:1.28 --target=web
+kubectl debug -it sample-web-go-multi -n security --image=busybox:1.28 --target=web
 
 / # ps aux
 
@@ -165,7 +167,7 @@ kubectl debug -it sample-web-go-multi --image=busybox:1.28 --target=web
 
 `エフェメラルコンテナの状態確認`
 ```bash
-kubectl describe pod sample-web-go-multi
+kubectl describe pod sample-web-go-multi -n security
 ```
 
 
